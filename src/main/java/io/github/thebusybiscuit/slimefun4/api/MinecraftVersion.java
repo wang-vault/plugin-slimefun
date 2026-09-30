@@ -62,6 +62,14 @@ public enum MinecraftVersion {
     MINECRAFT_1_21(21, 0, "1.21.x"),
 
     /**
+     * This constant represents Minecraft (Java Edition) Version 26.3
+     * (The "Wilderness Bound" update, the third game drop of 2026).
+     * Minecraft switched to a year-based versioning scheme in 2026,
+     * starting with 26.1.
+     */
+    MINECRAFT_26_3(26, 3, "26.3"),
+
+    /**
      * This constant represents an exceptional state in which we were unable
      * to identify the Minecraft Version we are using
      */

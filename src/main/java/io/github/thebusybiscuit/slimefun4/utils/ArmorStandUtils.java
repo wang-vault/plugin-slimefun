@@ -53,8 +53,12 @@ public class ArmorStandUtils {
         // The consumer method was moved from World to RegionAccessor in 1.20.2
         // Due to this, we need to use a rubbish workaround to support 1.20.1 and below
         // This causes flicker on these versions which sucks but not sure a better way around this right now.
-        if (PaperLib.getMinecraftVersion() < 20 ||
-                (PaperLib.getMinecraftVersion() == 20 && PaperLib.getMinecraftPatchVersion() < 2)) {
+        // PaperLib is unable to parse the year-based versioning scheme (e.g. 26.3),
+        // a version of "0" therefore means the format was not recognized and we
+        // assume a modern version in that case.
+        int minecraftVersion = PaperLib.getMinecraftVersion();
+
+        if (minecraftVersion > 0 && (minecraftVersion < 20 || (minecraftVersion == 20 && PaperLib.getMinecraftPatchVersion() < 2))) {
             ArmorStand armorStand = location.getWorld().spawn(location, ArmorStand.class);
             setupArmorStand(armorStand);
             return armorStand;

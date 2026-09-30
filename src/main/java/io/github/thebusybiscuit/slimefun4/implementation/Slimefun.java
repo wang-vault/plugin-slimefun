@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
@@ -128,6 +129,7 @@ import io.github.thebusybiscuit.slimefun4.implementation.tasks.armor.SlimefunArm
 import io.github.thebusybiscuit.slimefun4.implementation.tasks.armor.SolarHelmetTask;
 import io.github.thebusybiscuit.slimefun4.integrations.IntegrationsManager;
 import io.github.thebusybiscuit.slimefun4.utils.NumberUtils;
+import io.github.thebusybiscuit.slimefun4.utils.PatternUtils;
 import io.github.thebusybiscuit.slimefun4.utils.tags.SlimefunTag;
 import io.papermc.lib.PaperLib;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.MenuListener;
@@ -527,6 +529,20 @@ public class Slimefun extends JavaPlugin implements SlimefunAddon {
             int version = PaperLib.getMinecraftVersion();
             int patchVersion = PaperLib.getMinecraftPatchVersion();
 
+            /*
+             * Minecraft 26.1 introduced a new year-based versioning scheme (e.g. 26.3).
+             * PaperLib is only able to parse the old "1.x" format, so we need to check
+             * for the new format ourselves here.
+             */
+            if (version <= 0) {
+                Matcher matcher = PatternUtils.MINECRAFT_YEAR_BASED_VERSION.matcher(Bukkit.getVersion());
+
+                if (matcher.find()) {
+                    version = Integer.parseInt(matcher.group(1));
+                    patchVersion = Integer.parseInt(matcher.group(2));
+                }
+            }
+
             if (version > 0) {
                 // Check all supported versions of Minecraft
                 for (MinecraftVersion supportedVersion : MinecraftVersion.values()) {
@@ -537,7 +553,8 @@ public class Slimefun extends JavaPlugin implements SlimefunAddon {
                 }
 
                 // Looks like you are using an unsupported Minecraft Version
-                StartupWarnings.invalidMinecraftVersion(getLogger(), version, getDescription().getVersion());
+                String minecraftVersion = version >= 26 ? version + "." + patchVersion : "1." + version + ".x";
+                StartupWarnings.invalidMinecraftVersion(getLogger(), minecraftVersion, getDescription().getVersion());
                 return true;
             } else {
                 getLogger().log(Level.WARNING, "We could not determine the version of Minecraft you were using? ({0})", Bukkit.getVersion());
