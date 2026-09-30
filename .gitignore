@@ -1,0 +1,25 @@
+/bin/
+/target/
+/plugins/
+/sonar/
+/.settings/
+/.idea/
+/.vscode/
+/data-storage/
+/javadocs/
+
+dependency-reduced-pom.xml
+
+.classpath
+.factorypath
+.project
+*.iml
+*.bak
+.DS_Store
+# Offline build pipeline: binary classpath jars are fetched, not committed
+# (see tools/offline-build/lib/README.md for provenance & re-fetch commands)
+tools/offline-build/lib/jars/
+tools/offline-build/lib/relocated/
+tools/offline-build/lib/*.jar
+
+__pycache__/
